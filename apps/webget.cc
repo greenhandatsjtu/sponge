@@ -7,6 +7,7 @@
 using namespace std;
 
 void get_URL(const string &host, const string &path) {
+    cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
     // Your code here.
 
     // You will need to connect to the "http" service on
@@ -16,9 +17,18 @@ void get_URL(const string &host, const string &path) {
     // Then you'll need to print out everything the server sends back,
     // (not just one call to read() -- everything) until you reach
     // the "eof" (end of file).
-
-    cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
-    cerr << "Warning: get_URL() has not been implemented yet.\n";
+    Address addr = Address(host, "http");
+    TCPSocket sock = TCPSocket();
+    sock.connect(addr);
+    const string content = "GET " + path + " HTTP/1.1\r\nHost: " + host + "\r\nConnection: close\r\n\r\n";
+    size_t len = sock.write(content);
+    if (len != content.length()) {
+        throw runtime_error("write length error");
+    }
+    while (!sock.closed() && !sock.eof()) {
+        cout << sock.read();
+    }
+    //    cerr << "Warning: get_URL() has not been implemented yet.\n";
 }
 
 int main(int argc, char *argv[]) {
