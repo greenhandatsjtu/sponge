@@ -56,3 +56,9 @@ size_t StreamReassembler::available_output_cap() const { return _capacity - _out
 size_t StreamReassembler::unassembled_bytes() const { return _buf.size(); }
 
 bool StreamReassembler::empty() const { return _buf.empty(); }
+
+std::optional<size_t> StreamReassembler::get_checkpoint() const {
+    if (_index == 0)
+        return std::nullopt;
+    return std::make_optional(_index - 1);
+}
