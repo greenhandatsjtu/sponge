@@ -45,7 +45,7 @@ struct TCPHeader {
     bool rst = false;           //!< rst flag
     bool syn = false;           //!< syn flag
     bool fin = false;           //!< fin flag
-    uint16_t win = 0;           //!< window size
+    uint16_t win = 0;           //!< window size 
     uint16_t cksum = 0;         //!< checksum
     uint16_t uptr = 0;          //!< urgent pointer
     //!@}

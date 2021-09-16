@@ -9,6 +9,18 @@
 #include <functional>
 #include <queue>
 
+class Timer {
+    size_t _retx_timeout;
+    size_t _ms_start;
+    bool _start;
+
+  public:
+    void start(size_t, size_t);
+    void stop() { _start = false; }
+    bool expired(size_t) const;
+    bool running() const { return _start; }
+};
+
 //! \brief The "sender" part of a TCP implementation.
 
 //! Accepts a ByteStream, divides it up into segments and sends the
@@ -31,6 +43,13 @@ class TCPSender {
 
     //! the (absolute) sequence number for the next byte to be sent
     uint64_t _next_seqno{0};
+
+    Timer _timer;           // retransmission timer
+    size_t _ms_current{0};  // current time
+    std::queue<TCPSegment> _outstanding_segments{};
+    size_t _n_consecutive_retx{0};  // number of consecutive retransmissions
+    uint16_t _win{1};               // receiver window size
+    size_t _bytes_in_flight{0};
 
   public:
     //! Initialize a TCPSender
